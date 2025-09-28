@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Borrowings</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Borrowings Management</h2>
+            <div sec:authorize="hasRole('ROLE_ADMIN')">
+                <a th:href="@{/borrowings/new}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Create New Borrowing
+                </a>
+            </div>
+        </div>
+        
+        <!-- Filter Options -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <form th:action="@{/borrowings}" method="get" class="row g-3">
+                    <div class="col-md-3">
+                        <label for="status" class="form-label">Status</label>
+                        <select id="status" name="status" class="form-select">
+                            <option value="">All Status</option>
+                            <option value="ACTIVE" th:selected="${param.status == 'ACTIVE'}">Active</option>
+                            <option value="RETURNED" th:selected="${param.status == 'RETURNED'}">Returned</option>
+                            <option value="OVERDUE" th:selected="${param.status == 'OVERDUE'}">Overdue</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3" sec:authorize="hasRole('ROLE_ADMIN')">
+                        <label for="userId" class="form-label">User</label>
+                        <select id="userId" name="userId" class="form-select">
+                            <option value="">All Users</option>
+                            <option th:each="user : ${users}" th:value="${user.id}" 
+                                    th:text="${user.fullName}" th:selected="${param.userId == user.id}"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="startDate" class="form-label">From Date</label>
+                        <input type="date" id="startDate" name="startDate" class="form-control" th:value="${param.startDate}">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="endDate" class="form-label">To Date</label>
+                        <input type="date" id="endDate" name="endDate" class="form-control" th:value="${param.endDate}">
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-filter"></i> Apply Filters
+                        </button>
+                        <a th:href="@{/borrowings}" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-circle"></i> Clear Filters
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Borrowings Table -->
+        <div class="card">
+            <div class="card-body">
+                <div class="alert alert-info" th:if="${#lists.isEmpty(borrowings)}">
+                    No borrowing records found matching your criteria.
+                </div>
+                <div class="table-responsive" th:if="${not #lists.isEmpty(borrowings)}">
+                    <table class="table table-hover table-striped">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Book</th>
+                                <th sec:authorize="hasRole('ROLE_ADMIN')">User</th>
+                                <th>Borrow Date</th>
+                                <th>Due Date</th>
+                                <th>Return Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="borrowing : ${borrowings}">
+                                <td th:text="${borrowing.id}">1</td>
+                                <td>
+                                    <a th:href="@{/books/{id}(id=${borrowing.book.id})}" class="text-decoration-none">
+                                        <span th:text="${borrowing.book.title}">Book Title</span>
+                                    </a>
+                                </td>
+                                <td sec:authorize="hasRole('ROLE_ADMIN')" th:text="${borrowing.user.fullName}">User Name</td>
+                                <td th:text="${#temporals.format(borrowing.borrowDate, 'dd-MM-yyyy')}">01-01-2025</td>
+                                <td th:text="${#temporals.format(borrowing.dueDate, 'dd-MM-yyyy')}">15-01-2025</td>
+                                <td>
+                                    <span th:if="${borrowing.returnDate}" th:text="${#temporals.format(borrowing.returnDate, 'dd-MM-yyyy')}">15-01-2025</span>
+                                    <span th:unless="${borrowing.returnDate}" class="text-muted">Not returned</span>
+                                </td>
+                                <td>
+                                    <span class="badge" 
+                                          th:classappend="${borrowing.status == 'ACTIVE' ? 'bg-primary' : 
+                                                           (borrowing.status == 'RETURNED' ? 'bg-success' : 'bg-danger')}" 
+                                          th:text="${borrowing.status}">Status</span>
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a th:href="@{/borrowings/{id}(id=${borrowing.id})}" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a th:if="${borrowing.status == 'ACTIVE' || borrowing.status == 'OVERDUE'}" 
+                                           th:href="@{/borrowings/{id}/return(id=${borrowing.id})}" 
+                                           class="btn btn-sm btn-outline-success">
+                                            <i class="bi bi-arrow-return-left"></i> Return
+                                        </a>
+                                        <a th:if="${borrowing.status == 'ACTIVE'}" sec:authorize="hasRole('ROLE_ADMIN')"
+                                           th:href="@{/borrowings/{id}/extend(id=${borrowing.id})}" 
+                                           class="btn btn-sm btn-outline-secondary">
+                                            <i class="bi bi-calendar-plus"></i> Extend
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                <nav th:if="${totalPages > 1}">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:classappend="${currentPage == 0 ? 'disabled' : ''}">
+                            <a class="page-link" th:href="@{/borrowings(page=0, size=${size}, status=${param.status}, userId=${param.userId}, startDate=${param.startDate}, endDate=${param.endDate})}">First</a>
+                        </li>
+                        <li class="page-item" th:classappend="${currentPage == 0 ? 'disabled' : ''}">
+                            <a class="page-link" th:href="@{/borrowings(page=${currentPage - 1}, size=${size}, status=${param.status}, userId=${param.userId}, startDate=${param.startDate}, endDate=${param.endDate})}">Previous</a>
+                        </li>
+                        <li class="page-item" th:each="i : ${#numbers.sequence(currentPage > 2 ? currentPage - 2 : 0, currentPage + 2 < totalPages - 1 ? currentPage + 2 : totalPages - 1)}" 
+                            th:classappend="${i == currentPage ? 'active' : ''}">
+                            <a class="page-link" th:href="@{/borrowings(page=${i}, size=${size}, status=${param.status}, userId=${param.userId}, startDate=${param.startDate}, endDate=${param.endDate})}" th:text="${i + 1}"></a>
+                        </li>
+                        <li class="page-item" th:classappend="${currentPage == totalPages - 1 ? 'disabled' : ''}">
+                            <a class="page-link" th:href="@{/borrowings(page=${currentPage + 1}, size=${size}, status=${param.status}, userId=${param.userId}, startDate=${param.startDate}, endDate=${param.endDate})}">Next</a>
+                        </li>
+                        <li class="page-item" th:classappend="${currentPage == totalPages - 1 ? 'disabled' : ''}">
+                            <a class="page-link" th:href="@{/borrowings(page=${totalPages - 1}, size=${size}, status=${param.status}, userId=${param.userId}, startDate=${param.startDate}, endDate=${param.endDate})}">Last</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
