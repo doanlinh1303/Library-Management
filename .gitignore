@@ -1,0 +1,46 @@
+# Ignore IntelliJ IDEA project files
+.idea/
+
+# Ignore build output
+/target/
+
+# Ignore OS generated files
+.DS_Store
+Thumbs.db
+
+# Ignore logs
+*.log
+
+# Ignore other IDE settings
+*.iml
+
+# Ignore Maven wrapper
+.mvn/
+
+# Ignore database.properties in repository root
+/database.properties
+
+# Compiled class file
+*.class
+
+# Package Files
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Eclipse project files
+.classpath
+.project
+.settings/
+
+# Spring Boot
+.spring-boot-devtools.restart.trigger
+
+# VSCode
+.vscode/
+
+# Uploads folder for development
+/uploads/

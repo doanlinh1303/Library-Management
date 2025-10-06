@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System - Borrowings</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link th:href="@{/css/main.css}" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" th:href="@{/}">Library Management System</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/}"><i class="bi bi-house"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/books}"><i class="bi bi-book"></i> Books</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/users}"><i class="bi bi-people"></i> Users</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/borrowings}"><i class="bi bi-arrow-left-right"></i> Borrowings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/reports}"><i class="bi bi-bar-chart"></i> Reports</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <span class="nav-link text-light"><i class="bi bi-person-circle"></i> Welcome Admin</span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/logout}"><i class="bi bi-box-arrow-right"></i> Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4 mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Book Borrowings</h2>
+            <a th:href="@{/borrowings/new}" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> New Borrowing
+            </a>
+        </div>
+
+        <!-- Success/Error Messages -->
+        <div class="alert alert-success alert-dismissible fade show" th:if="${successMessage}" role="alert">
+            <i class="bi bi-check-circle-fill"></i> <span th:text="${successMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div class="alert alert-danger alert-dismissible fade show" th:if="${errorMessage}" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i> <span th:text="${errorMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <!-- Filter Bar -->
+        <!-- Filter Options -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <form th:action="@{/borrowings}" method="get" class="row g-3">
+                    <div class="col-md-3">
+                        <label for="status" class="form-label">Status</label>
+                        <select id="status" name="status" class="form-select">
+                            <option value="" th:selected="${selectedStatus == ''}">All Status</option>
+                            <option value="ACTIVE" th:selected="${selectedStatus == 'ACTIVE'}">Active</option>
+                            <option value="RETURNED" th:selected="${selectedStatus == 'RETURNED'}">Returned</option>
+                            <option value="OVERDUE" th:selected="${selectedStatus == 'OVERDUE'}">Overdue</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="user" class="form-label">User</label>
+                      <select id="user" name="user" class="form-select">
+                          <option value="" th:selected="${selectedUser == ''}">All Users</option>
+                          <option th:each="user : ${users}"
+                                  th:value="${user.id}"
+                                  th:text="${user.fullName}"
+                                  th:selected="${user.id.longValue() == selectedUser}">
+                          </option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="dateFrom" class="form-label">From Date</label>
+                        <input type="date" id="dateFrom" name="dateFrom" class="form-control" th:value="${selectedDateFrom}">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="dateTo" class="form-label">To Date</label>
+                        <input type="date" id="dateTo" name="dateTo" class="form-control" th:value="${selectedDateTo}">
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-filter"></i> Apply Filters
+                        </button>
+                        <a th:href="@{/borrowings}" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-circle"></i> Clear Filters
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Borrowings List -->
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-primary">
+                    <tr>
+                        <th>ID</th>
+                        <th>Book</th>
+                        <th>Borrower</th>
+                        <th>Borrow Date</th>
+                        <th>Due Date</th>
+                        <th>Return Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="borrowing : ${borrowings}">
+                        <td th:text="${borrowing.id}">1</td>
+                        <td>
+                            <a th:if="${borrowing.book != null}" th:href="@{'/books/' + ${borrowing.bookId}}" th:text="${borrowing.book.title}">Book Title</a>
+                            <span th:unless="${borrowing.book != null}" th:text="'Book #' + ${borrowing.bookId}">Book Title</span>
+                        </td>
+                        <td th:text="${borrowing.user.fullName}">User Name</td>
+                        <td th:text="${borrowing.borrowDate}">01/01/2025</td>
+                        <td th:text="${borrowing.dueDate}">15/01/2025</td>
+                        <td th:text="${borrowing.returnDate}">15/01/2025</td>
+                        <td>
+                            <span class="badge"
+                                  th:classappend="${borrowing.status == T(com.library.model.Borrowing.BorrowStatus).RETURNED ? 'bg-success' :
+                                                 (borrowing.status == T(com.library.model.Borrowing.BorrowStatus).OVERDUE ? 'bg-danger' : 'bg-primary')}"
+                                  th:text="${borrowing.statusDisplay}">Status</span>
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <a th:href="@{'/borrowings/' + ${borrowing.id}}" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+<!--                                <a th:if="${borrowing.status != T(com.library.model.Borrowing.BorrowStatus).RETURNED}">-->
+<!--                                    <i class="bi bi-arrow-return-left"></i> Return-->
+<!--                                </a>-->
+<!--                                <a th:if="${borrowing.status != T(com.library.model.Borrowing.BorrowStatus).RETURNED}>-->
+<!--                                    <i class="bi bi-calendar-plus"></i> Extend-->
+<!--                                </a>-->
+                                <button th:if="${borrowing.status == T(com.library.model.Borrowing.BorrowStatus).ACTIVE}"
+                                       class="btn btn-sm btn-outline-success"
+                                       data-bs-toggle="modal"
+                                       th:data-bs-target="'#returnModal' + ${borrowing.id}">
+                                    <i class="bi bi-arrow-return-left"></i> Return
+                                    <i class="bi bi-calendar-plus"></i> Extend
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:if="${borrowings.empty}">
+                        <td colspan="8" class="text-center">No borrowings found</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Return Book Modal -->
+    <div th:each="borrowing : ${borrowings}" th:if="${borrowing.status == T(com.library.model.Borrowing.BorrowStatus).ACTIVE}"
+         class="modal fade" th:id="'returnModal' + ${borrowing.id}" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Return Book</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form th:action="@{'/borrowings/return/' + ${borrowing.id}}" method="post">
+                    <div class="modal-body">
+                        <p>You are about to return the book:</p>
+                        <p><strong th:text="${borrowing.book != null ? borrowing.book.title : 'Book #' + borrowing.bookId}">Book Title</strong></p>
+
+                        <div class="mb-3">
+                            <label for="returnDate" class="form-label">Return Date</label>
+                            <input type="date" id="returnDate" name="returnDate" class="form-control"
+                                   th:value="${#temporals.format(#temporals.createToday(), 'yyyy-MM-dd')}" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success">Confirm Return</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-3 mt-auto">
+        <div class="container text-center">
+            <p>&copy; 2025 Library Management System</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script th:src="@{/js/main.js}"></script>
+</body>
+</html>

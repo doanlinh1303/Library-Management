@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System - Reports</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">Library Management System</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html"><i class="bi bi-house"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../books/list.html"><i class="bi bi-book"></i> Books</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../users/list.html"><i class="bi bi-people"></i> Users</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../borrowings/list.html"><i class="bi bi-arrow-left-right"></i> Borrowings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html"><i class="bi bi-bar-chart"></i> Reports</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <span class="nav-link text-light"><i class="bi bi-person-circle"></i> Welcome Admin</span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../login.html"><i class="bi bi-box-arrow-right"></i> Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4 mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Reports & Statistics</h2>
+            <div class="btn-group">
+                <button type="button" class="btn btn-outline-primary" onclick="window.print()">
+                    <i class="bi bi-printer"></i> Print Report
+                </button>
+                <button type="button" class="btn btn-outline-success" onclick="exportToExcel()">
+                    <i class="bi bi-file-excel"></i> Export to Excel
+                </button>
+            </div>
+        </div>
+        
+        <!-- Stats Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card stats-card">
+                    <div class="stats-icon text-primary">
+                        <i class="bi bi-book"></i>
+                    </div>
+                    <div class="stats-number">345</div>
+                    <div class="stats-label">Total Books</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stats-card">
+                    <div class="stats-icon text-success">
+                        <i class="bi bi-person"></i>
+                    </div>
+                    <div class="stats-number">142</div>
+                    <div class="stats-label">Active Users</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stats-card">
+                    <div class="stats-icon text-info">
+                        <i class="bi bi-arrow-right"></i>
+                    </div>
+                    <div class="stats-number">28</div>
+                    <div class="stats-label">Current Borrowings</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stats-card">
+                    <div class="stats-icon text-danger">
+                        <i class="bi bi-exclamation-circle"></i>
+                    </div>
+                    <div class="stats-number">7</div>
+                    <div class="stats-label">Overdue Books</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Charts -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Books by Category</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="booksByCategoryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Borrowing Activity</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="borrowingsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Report Tables -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Most Popular Books</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Book Title</th>
+                                        <th>Author</th>
+                                        <th>Category</th>
+                                        <th>Borrowings Count</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>Clean Code</td>
+                                        <td>Robert C. Martin</td>
+                                        <td>Programming</td>
+                                        <td>32</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>Design Patterns</td>
+                                        <td>Erich Gamma et al.</td>
+                                        <td>Programming</td>
+                                        <td>28</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>Spring in Action</td>
+                                        <td>Craig Walls</td>
+                                        <td>Java</td>
+                                        <td>24</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>Effective Java</td>
+                                        <td>Joshua Bloch</td>
+                                        <td>Java</td>
+                                        <td>20</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td>Head First Design Patterns</td>
+                                        <td>Eric Freeman, Elisabeth Robson</td>
+                                        <td>Programming</td>
+                                        <td>18</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Top Users by Borrowings</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>User Name</th>
+                                        <th>Email</th>
+                                        <th>Total Borrowings</th>
+                                        <th>Current Borrowings</th>
+                                        <th>Overdue Items</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>Nguyen Van A</td>
+                                        <td>nguyenvana@example.com</td>
+                                        <td>15</td>
+                                        <td>3</td>
+                                        <td>0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>Tran Thi B</td>
+                                        <td>tranthib@example.com</td>
+                                        <td>12</td>
+                                        <td>2</td>
+                                        <td>1</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>Le Van C</td>
+                                        <td>levanc@example.com</td>
+                                        <td>10</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>Pham Van D</td>
+                                        <td>phamvand@example.com</td>
+                                        <td>8</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td>Hoang Thi E</td>
+                                        <td>hoangthie@example.com</td>
+                                        <td>7</td>
+                                        <td>2</td>
+                                        <td>1</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-3 mt-auto">
+        <div class="container text-center">
+            <p>&copy; 2025 Library Management System</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="../js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize charts
+            createBooksByCategoryChart(document.getElementById('booksByCategoryChart').getContext('2d'));
+            createBorrowingsChart(document.getElementById('borrowingsChart').getContext('2d'));
+        });
+        
+        function exportToExcel() {
+            alert('Export to Excel functionality would be implemented here in a real application.');
+            // In a real application, this would call an API endpoint to generate and download an Excel file
+        }
+    </script>
+</body>
+</html>
+

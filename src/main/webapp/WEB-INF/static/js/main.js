@@ -110,6 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+// Sample data for charts (can be replaced with actual data in a real application)
 function createBooksByCategoryChart(ctx, dataMap) {
     if (!ctx) return;
 
@@ -140,6 +141,7 @@ function createBooksByCategoryChart(ctx, dataMap) {
         }
     });
 }
+
 
 function createBorrowingsChart(ctx) {
     if (!ctx) return;

@@ -1,0 +1,163 @@
+/* Main CSS file for Library Management System */
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.navbar-brand {
+    font-weight: bold;
+}
+
+.footer {
+    margin-top: auto;
+}
+
+/* Custom card styling */
+.card {
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Book cover placeholder */
+.book-cover-placeholder {
+    background-color: #f8f9fa;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    border-radius: 4px;
+}
+
+/* User avatar */
+.avatar {
+    object-fit: cover;
+}
+
+/* Badge styling */
+.badge {
+    font-weight: normal;
+    padding: 0.5em 0.8em;
+}
+
+/* Table responsive fixes */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Form elements */
+.form-control:focus, .form-select:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Pagination custom styling */
+.pagination .page-link {
+    color: #0d6efd;
+}
+
+.pagination .active .page-link {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+/* Dashboard stats card */
+.stats-card {
+    text-align: center;
+    padding: 1.5rem;
+}
+
+.stats-card .stats-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.stats-card .stats-number {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.stats-card .stats-label {
+    font-size: 1rem;
+    color: #6c757d;
+}
+
+/* Book categories color coding */
+.category-fiction { background-color: #ffc107; }
+.category-nonfiction { background-color: #17a2b8; }
+.category-programming { background-color: #6610f2; }
+.category-science { background-color: #20c997; }
+.category-history { background-color: #fd7e14; }
+
+/* Custom buttons */
+.btn-borrow {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: white;
+}
+
+.btn-borrow:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+    color: white;
+}
+
+.btn-return {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+    color: white;
+}
+
+.btn-return:hover {
+    background-color: #138496;
+    border-color: #117a8b;
+    color: white;
+}
+
+/* Alert styling */
+.alert {
+    border-radius: 0.25rem;
+}
+
+/* Print styles for reports */
+@media print {
+    .no-print, .no-print * {
+        display: none !important;
+    }
+    
+    .print-only {
+        display: block !important;
+    }
+    
+    body {
+        padding: 0;
+        margin: 0;
+    }
+    
+    .container {
+        width: 100%;
+        max-width: none;
+        padding: 0;
+        margin: 0;
+    }
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+    .stats-card .stats-icon {
+        font-size: 2rem;
+    }
+    
+    .stats-card .stats-number {
+        font-size: 1.5rem;
+    }
+}
+
