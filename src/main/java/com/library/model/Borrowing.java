@@ -4,54 +4,43 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Borrowing {
-    public enum Status {
-        ACTIVE, RETURNED, OVERDUE
-    }
-    private Integer id;
-    private Integer userId;
+    private Long id;
     private Long bookId;
+    private Long userId;
     private LocalDate borrowDate;
     private LocalDate dueDate;
     private LocalDate returnDate;
-    private Status status;
+    private BorrowStatus status;
     private LocalDateTime createdAt;
 
-    private Book book; // Associated Book object
-    private User user; // Associated User object
+    // Thông tin phụ
+    private Book book;
+    private User user;
+
+    public enum BorrowStatus {
+        ACTIVE, RETURNED, OVERDUE
+    }
 
     public Borrowing() {
         this.createdAt = LocalDateTime.now();
-        this.status = Status.ACTIVE;
-        this.borrowDate = LocalDate.now();
-        this.dueDate = borrowDate.plusWeeks(2); // Default due date is 2 weeks from borrow date
-    }
-    public Borrowing(Integer id, Integer userId, Long bookId, LocalDate borrowDate, LocalDate dueDate, LocalDate returnDate, Status status, LocalDateTime createdAt, Book book, User user) {
-        this.id = id;
-        this.userId = userId;
-        this.bookId = bookId;
-        this.borrowDate = borrowDate;
-        this.dueDate = dueDate;
-        this.returnDate = returnDate;
-        this.status = status;
-        this.createdAt = createdAt;
-        this.book = book;
-        this.user = user;
+        this.status = BorrowStatus.ACTIVE;
     }
 
-    public Integer getId() {
+    public Borrowing(Long bookId, Long userId, LocalDate borrowDate, LocalDate dueDate, BorrowStatus status) {
+        this.bookId = bookId;
+        this.userId = userId;
+        this.borrowDate = borrowDate;
+        this.dueDate = dueDate;
+        this.status = status;
+        this.createdAt = LocalDateTime.now();
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
     }
 
     public Long getBookId() {
@@ -60,6 +49,14 @@ public class Borrowing {
 
     public void setBookId(Long bookId) {
         this.bookId = bookId;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public LocalDate getBorrowDate() {
@@ -86,11 +83,11 @@ public class Borrowing {
         this.returnDate = returnDate;
     }
 
-    public Status getStatus() {
+    public BorrowStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(BorrowStatus status) {
         this.status = status;
     }
 
@@ -116,5 +113,22 @@ public class Borrowing {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public boolean isOverdue() {
+        if (returnDate != null) {
+            return false; // Đã trả sách
+        }
+        return LocalDate.now().isAfter(dueDate);
+    }
+
+    public String getStatusDisplay() {
+        if (status == BorrowStatus.RETURNED) {
+            return "RETURNED";
+        } else if (isOverdue()) {
+            return "OVERDUE";
+        } else {
+            return "ACTIVE";
+        }
     }
 }

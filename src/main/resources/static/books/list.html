@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -51,32 +50,38 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2>Book Catalog</h2>
             <div>
-                <a href="form.html" class="btn btn-primary">
-                    <i class="bi bi-plus-circle"></i> Add New Book
+                <a th:href="@{/books/new}" class="btn btn-primary">
+                    <i class="bi bi-plus"></i> Add New Book
                 </a>
             </div>
         </div>
-        
+
         <!-- Search Bar -->
         <div class="row mb-4">
             <div class="col-md-12">
-                <form action="list.html" method="get" class="d-flex">
-                    <input type="text" name="keyword" value="" class="form-control me-2" placeholder="Search by title, author, ISBN...">
+                <!-- form trỏ về /books vì controller map @GetMapping("/books") -->
+                <form th:action="@{/books}" method="get" class="d-flex">
+                    <!-- từ khóa search -->
+                    <input type="text" name="query" th:value="${query}"
+                           class="form-control me-2" placeholder="Search by title, author, ISBN...">
+
+                    <!-- dropdown category lấy từ DB -->
                     <select name="category" class="form-select me-2" style="max-width: 200px;">
                         <option value="">All Categories</option>
-                        <option value="Fiction">Fiction</option>
-                        <option value="Non-Fiction">Non-Fiction</option>
-                        <option value="Programming">Programming</option>
-                        <option value="Science">Science</option>
-                        <option value="History">History</option>
-                        <option value="Biography">Biography</option>
+                        <option th:each="cate : ${categories}"
+                                th:value="${cate}"
+                                th:text="${cate}"
+                                th:selected="${cate == selectedCategory}">
+                        </option>
                     </select>
+
                     <button type="submit" class="btn btn-outline-primary">
                         <i class="bi bi-search"></i> Search
                     </button>
                 </form>
             </div>
         </div>
+
         
         <!-- Books List -->
         <div class="row">
@@ -95,107 +100,30 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>
-                                    <img src="../img/no-cover.png" class="img-thumbnail" alt="Book Cover" width="60">
-                                </td>
-                                <td>Clean Code</td>
-                                <td>Robert C. Martin</td>
-                                <td>Programming</td>
-                                <td>9780132350884</td>
-                                <td>
-                                    <span class="badge bg-success">Available</span>
-                                </td>
-                                <td>
-                                    <div class="btn-group">
-                                        <a href="detail.html" class="btn btn-sm btn-outline-primary">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-                                        <a href="form.html" class="btn btn-sm btn-outline-secondary">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                        <a href="#" class="btn btn-sm btn-outline-success">
-                                            <i class="bi bi-arrow-right"></i> Borrow
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <img src="../img/no-cover.png" class="img-thumbnail" alt="Book Cover" width="60">
-                                </td>
-                                <td>Design Patterns</td>
-                                <td>Erich Gamma et al.</td>
-                                <td>Programming</td>
-                                <td>9780201633610</td>
-                                <td>
-                                    <span class="badge bg-danger">Borrowed</span>
-                                </td>
-                                <td>
-                                    <div class="btn-group">
-                                        <a href="detail.html" class="btn btn-sm btn-outline-primary">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-                                        <a href="form.html" class="btn btn-sm btn-outline-secondary">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                        <button class="btn btn-sm btn-outline-secondary" disabled>
-                                            <i class="bi bi-lock"></i> Borrowed
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <img src="../img/no-cover.png" class="img-thumbnail" alt="Book Cover" width="60">
-                                </td>
-                                <td>Spring in Action</td>
-                                <td>Craig Walls</td>
-                                <td>Java</td>
-                                <td>9781617294945</td>
-                                <td>
-                                    <span class="badge bg-success">Available</span>
-                                </td>
-                                <td>
-                                    <div class="btn-group">
-                                        <a href="detail.html" class="btn btn-sm btn-outline-primary">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-                                        <a href="form.html" class="btn btn-sm btn-outline-secondary">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                        <a href="#" class="btn btn-sm btn-outline-success">
-                                            <i class="bi bi-arrow-right"></i> Borrow
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <img src="../img/no-cover.png" class="img-thumbnail" alt="Book Cover" width="60">
-                                </td>
-                                <td>Effective Java</td>
-                                <td>Joshua Bloch</td>
-                                <td>Java</td>
-                                <td>9780134685991</td>
-                                <td>
-                                    <span class="badge bg-success">Available</span>
-                                </td>
-                                <td>
-                                    <div class="btn-group">
-                                        <a href="detail.html" class="btn btn-sm btn-outline-primary">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-                                        <a href="form.html" class="btn btn-sm btn-outline-secondary">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                        <a href="#" class="btn btn-sm btn-outline-success">
-                                            <i class="bi bi-arrow-right"></i> Borrow
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
+                        <tr th:each="book : ${books}">
+                            <td><img src="../img/no-cover.png" class="img-thumbnail" alt="Book Cover" width="60"></td>
+                            <td th:text="${book.title}">Title</td>
+                            <td th:text="${book.author}">Author</td>
+                            <td th:text="${book.category}">Category</td>
+                            <td th:text="${book.isbn}">ISBN</td>
+                            <td>
+        <span class="badge" th:classappend="${book.available} ? 'bg-success' : 'bg-danger'">
+            <span th:text="${book.available} ? 'Available' : 'Borrowed'">Status</span>
+        </span>
+                            </td>
+                            <td>
+                                <div class="btn-group">
+                                    <a th:href="@{'/books/' + ${book.id}}" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a th:href="@{'/books/edit/' + ${book.id}}" class="btn btn-sm btn-outline-secondary">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
                         </tbody>
+
                     </table>
                 </div>
                 

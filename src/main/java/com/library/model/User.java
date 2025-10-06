@@ -1,47 +1,38 @@
 package com.library.model;
+
 import java.time.LocalDateTime;
 
 public class User {
-    public enum Role {
-        READER, STAFF
-    }
-    public enum Status {
-        ACTIVE, INACTIVE, BLOCKED
-    }
-    private Integer id;
+    private Long id;
     private String username;
     private String password;
     private String fullName;
     private String email;
     private String phone;
-    private Role role;
-    private Status status;
+    private UserRole role;
+    private UserStatus status;
     private String profileImageUrl;
     private LocalDateTime createdAt;
 
-    public User() {
-        this.createdAt = LocalDateTime.now();
-        this.role = Role.READER;
-        this.status = Status.ACTIVE;
-    }
-    public User(Integer id, String username, String password, String fullName, String email, String phone, Role role, Status status, String profileImageUrl, LocalDateTime createdAt) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.fullName = fullName;
-        this.email = email;
-        this.phone = phone;
-        this.role = role;
-        this.status = status;
-        this.profileImageUrl = profileImageUrl;
-        this.createdAt = createdAt;
+    public enum UserRole {
+        ADMIN, LIBRARIAN, USER
     }
 
-    public Integer getId() {
+    public enum UserStatus {
+        ACTIVE, INACTIVE, BLOCKED
+    }
+
+    public User() {
+        this.createdAt = LocalDateTime.now();
+        this.role = UserRole.USER;
+        this.status = UserStatus.ACTIVE;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -85,19 +76,19 @@ public class User {
         this.phone = phone;
     }
 
-    public Role getRole() {
+    public UserRole getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(UserRole role) {
         this.role = role;
     }
 
-    public Status getStatus() {
+    public UserStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(UserStatus status) {
         this.status = status;
     }
 
@@ -115,5 +106,17 @@ public class User {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getStatusDisplay() {
+        return status.toString();
+    }
+
+    public String getRoleDisplay() {
+        return role.toString();
+    }
+
+    public boolean isActive() {
+        return status == UserStatus.ACTIVE;
     }
 }
