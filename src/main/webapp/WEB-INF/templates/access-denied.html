@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Truy cập bị từ chối - Hệ thống Quản lý Thư viện</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        .access-denied-container {
+            max-width: 600px;
+            margin: 100px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .access-denied-icon {
+            font-size: 72px;
+            color: #dc3545;
+            margin-bottom: 20px;
+        }
+        .access-denied-title {
+            font-size: 24px;
+            color: #dc3545;
+            margin-bottom: 20px;
+        }
+        .access-denied-message {
+            margin-bottom: 30px;
+        }
+        .btn-home {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="access-denied-container">
+        <div class="access-denied-icon">⚠️</div>
+        <h2 class="access-denied-title">Truy cập bị từ chối</h2>
+        <div class="access-denied-message">
+            <p>Bạn không có quyền truy cập vào trang này. Vui lòng liên hệ với quản trị viên nếu bạn cần hỗ trợ.</p>
+        </div>
+        <a th:href="@{/}" class="btn-home">Quay lại Trang chủ</a>
+    </div>
+</body>
+</html>
+

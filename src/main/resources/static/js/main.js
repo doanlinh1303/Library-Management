@@ -110,27 +110,28 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Sample data for charts (can be replaced with actual data in a real application)
-function createBooksByCategoryChart(ctx) {
+function createBooksByCategoryChart(ctx, dataMap) {
     if (!ctx) return;
-    
+
+    let labels = Object.keys(dataMap);
+    let values = Object.values(dataMap);
+
     return new Chart(ctx, {
         type: 'pie',
         data: {
-            labels: ['Fiction', 'Non-Fiction', 'Programming', 'Science', 'History', 'Biography'],
+            labels: labels,
             datasets: [{
-                data: [65, 40, 25, 15, 20, 10],
+                data: values,
                 backgroundColor: [
-                    '#ffc107', '#17a2b8', '#6610f2', '#20c997', '#fd7e14', '#6c757d'
+                    '#ffc107', '#17a2b8', '#6610f2',
+                    '#20c997', '#fd7e14', '#6c757d'
                 ]
             }]
         },
         options: {
             responsive: true,
             plugins: {
-                legend: {
-                    position: 'right',
-                },
+                legend: { position: 'right' },
                 title: {
                     display: true,
                     text: 'Books by Category'
@@ -171,4 +172,3 @@ function createBorrowingsChart(ctx) {
         }
     });
 }
-
